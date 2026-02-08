@@ -21,19 +21,19 @@ The application evolves from a simple calculator into a **production-grade, role
 
 ## 🔗 Deployment Details
 
-- **Live App (Integrated):** [https://stgi-django-calculator-assessment.vercel.app/](https://stgi-django-calculator-assessment.vercel.app/)
+- **Live App (Integrated):** [https://django-fastapi-learning-project.vercel.app/](https://django-fastapi-learning-project.vercel.app/)
 
 ## 🔗 Frontend and Backend Deployed Link
-- **Vercel (Frontend):** `https://stgi-django-calculator-assessment.vercel.app/` 
-- **Koyeb (Backend API):** `https://stgi-calculatorpro.koyeb.app/` 
-- **Cloud Database::**     `PostgreSQL (Hosted on Render) ` 
+- **Vercel (Frontend):** `https://django-fastapi-learning-project.vercel.app/` 
+- **Koyeb (Backend API):** `https://calculatorpro-django-backend.koyeb.app/` 
+- **Cloud Database:** `PostgreSQL (Hosted on Render)` 
 
 ## 🔗 Admin Panel Access (For Evaluation)
 
 The Django Admin panel is enabled for reviewer evaluation and verification of backend functionality.
 
 * **Admin URL:**
-  [https://stgi-calculatorpro.koyeb.app/admin/](https://stgi-calculatorpro.koyeb.app/admin/)
+  [https://calculatorpro-django-backend.koyeb.app/admin/](https://calculatorpro-django-backend.koyeb.app/admin/)
 
 * **Admin Credentials (Temporary):**
 
