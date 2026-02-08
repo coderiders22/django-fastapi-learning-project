@@ -681,6 +681,112 @@ input::placeholder {
   width: 18px;
   height: 18px;
   border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Divider between login and guest option */
+.divider {
+  position: relative;
+  text-align: center;
+  margin: 2rem 0 1.5rem;
+}
+
+.divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.divider span {
+  position: relative;
+  background: white;
+  padding: 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.footer-links {
+  text-align: center;
+}
+
+.footer-links p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* Link to registration page */
+.signup-link {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.signup-link:hover {
+  color: var(--primary-dark);
+  gap: 0.5rem;
+}
+
+/* ================= GUEST BUTTON ================= */
+/* Dashed border button for guest access */
+.guest-btn {
+  width: 100%;
+  padding: 1.05rem;
+  background: white;
+  border: 2px dashed rgba(59, 130, 246, 0.4);
+  border-radius: 12px;
+  color: var(--primary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-bottom: 1.5rem;
+}
+
+.guest-btn:hover {
+  background: rgba(59, 130, 246, 0.05);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+/* ================= LOADING OVERLAY ================= */
+/* Full-screen overlay during authentication */
+.full-loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4000;
+}
+
+.loading-content {
+  text-align: center;
+  color: white;
+}
+
+/* Large spinner for loading state */
+.loading-spinner {
+  width: 64px;
+  height: 64px;
+  border: 6px solid rgba(255, 255, 255, 0.2);
   border-top: 6px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;

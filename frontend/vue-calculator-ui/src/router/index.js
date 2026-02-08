@@ -14,33 +14,33 @@ import NotFound from '../views/NotFound.vue'
 
 // Route definitions with metadata for guards
 const routes = [
-  {
-    path: '/',
-    name: 'Welcome',
-    component: Welcome
+  { 
+    path: '/', 
+    name: 'Welcome', 
+    component: Welcome 
   },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login,
+  { 
+    path: '/login', 
+    name: 'Login', 
+    component: Login, 
     meta: { guestOnly: true }  // Only accessible when not logged in
   },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register,
+  { 
+    path: '/register', 
+    name: 'Register', 
+    component: Register, 
     meta: { guestOnly: true }  // Only accessible when not logged in
   },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
+  { 
+    path: '/dashboard', 
+    name: 'Dashboard', 
+    component: Dashboard, 
     meta: { requiresAuth: true }  // Requires authentication
   },
-  {
+  { 
     path: '/:pathMatch(.*)*',  // Catch-all route for 404
-    name: 'NotFound',
-    component: NotFound
+    name: 'NotFound', 
+    component: NotFound 
   }
 ]
 
@@ -66,7 +66,7 @@ router.beforeEach(async (to, from, next) => {
     try {
       // Make API call to check authentication status
       const res = await api.get('/auth/me/', { withCredentials: true })
-
+      
       // If user is authenticated, allow access
       if (res.data.is_authenticated === true) {
         return next()
