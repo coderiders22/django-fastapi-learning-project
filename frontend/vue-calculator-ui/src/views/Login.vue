@@ -295,6 +295,9 @@ export default {
 
         // Remove guest flag since user is now authenticated
         localStorage.removeItem('is_guest')
+        
+        // Mark user as authenticated for router guard
+        localStorage.setItem('is_authenticated', 'true')
 
         // Show success message to user
         this.modalMessage = 'Login successful!'

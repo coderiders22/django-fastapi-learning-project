@@ -61,43 +61,27 @@ router.beforeEach(async (to, from, next) => {
     return next()
   }
 
-  // For non-guest users, verify authentication with backend
+  // For non-guest users, verify authentication
   if (to.meta.requiresAuth) {
-    try {
-      // Make API call to check authentication status
-      const res = await api.get('/auth/me/', { withCredentials: true })
-      
-      // If user is authenticated, allow access
-      if (res.data.is_authenticated === true) {
-        return next()
-      }
+    // Check if user is authenticated via localStorage flag
+    // This avoids API call on every navigation which might fail due to network/CORS issues
+    const isAuthenticated = localStorage.getItem('is_authenticated') === 'true'
 
-      // Not authenticated: redirect to login with return URL
-      return next({ name: 'Login', query: { redirect: to.fullPath } })
-    } catch (error) {
-      // API call failed: treat as not authenticated
-      return next({ name: 'Login', query: { redirect: to.fullPath } })
+    if (isAuthenticated) {
+      return next()
     }
+
+    // Not authenticated: redirect to login
+    return next({ name: 'Login', query: { redirect: to.fullPath } })
   }
 
   // GUEST-ONLY ROUTES: login and register pages
   if (to.meta.guestOnly) {
-    try {
-      // Check if user is already authenticated
-      const res = await api.get('/auth/me/', { withCredentials: true })
+    const isAuthenticated = localStorage.getItem('is_authenticated') === 'true'
 
-      // If authenticated, redirect to dashboard (skip login/register)
-      if (res.data.is_authenticated === true) {
-        const redirect = to.query.redirect || '/dashboard'
-        return next(redirect)
-      }
-
-      // If in guest mode, redirect to dashboard
-      if (isGuest) {
-        return next('/dashboard')
-      }
-    } catch (error) {
-      // API error: allow access to login/register page
+    // If authenticated, redirect to dashboard
+    if (isAuthenticated) {
+      return next('/dashboard')
     }
   }
 

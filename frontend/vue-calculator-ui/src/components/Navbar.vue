@@ -296,6 +296,7 @@ export default {
           // User is authenticated: update username
           this.username = res.data.username
           localStorage.setItem('username', res.data.username)
+          localStorage.setItem('is_authenticated', 'true') // Sync auth flag
           localStorage.removeItem('is_guest')  // Clear guest flag if present
         } else {
           // Not authenticated: clear auth data
@@ -313,6 +314,7 @@ export default {
     clearAuth() {
       this.username = null
       localStorage.removeItem('username')
+      localStorage.removeItem('is_authenticated')
     },
 
     // Closes all open menus

@@ -80,16 +80,19 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   // Success case - just return the response as-is
   (response) => response,
-  
+
   // Error case - check if it's a 401 and redirect if needed
   (error) => {
     // If unauthorized (session expired or not logged in)
     if (error.response?.status === 401) {
+      // Clear auth flag so router knows we are logged out
+      localStorage.removeItem('is_authenticated')
+      localStorage.removeItem('user')
+
       // Redirect to login page with session_expired flag
-      // This lets the login page show a "Your session has expired" message
       window.location.href = '/login?session_expired=true'
     }
-    
+
     // Reject the promise so the calling code can catch the error
     return Promise.reject(error)
   }
