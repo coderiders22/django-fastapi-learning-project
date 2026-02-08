@@ -298,6 +298,10 @@ export default {
           throw new Error('Authentication verification failed')
         }
 
+        // Store user authentication in localStorage for cross-domain compatibility
+        localStorage.setItem('isAuthenticated', 'true')
+        localStorage.setItem('username', response.data.username)
+        
         // Remove guest flag since user is now authenticated
         localStorage.removeItem('is_guest')
 

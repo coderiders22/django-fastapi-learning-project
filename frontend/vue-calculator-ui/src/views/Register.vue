@@ -355,10 +355,14 @@ export default {
         // Backend auto-logs in the user after registration, 
         // so we don't need a separate login call
         // Verify the registration response
-        if (!registerResponse.data) {
+        if (!registerResponse.data || !registerResponse.data.username) {
           throw new Error('Registration verification failed')
         }
 
+        // Store user authentication in localStorage for cross-domain compatibility
+        localStorage.setItem('isAuthenticated', 'true')
+        localStorage.setItem('username', registerResponse.data.username)
+        
         // Remove guest flag since user now has an account
         localStorage.removeItem('is_guest')
 
