@@ -284,7 +284,7 @@ export default {
 
       try {
         // Send login request to backend with credentials
-        await api.post(
+        const response = await api.post(
           '/auth/login/',
           {
             username: this.username,
@@ -292,6 +292,11 @@ export default {
           },
           { withCredentials: true }  // Important: sends cookies with request
         )
+
+        // Verify the response indicates successful authentication
+        if (!response.data.is_authenticated) {
+          throw new Error('Authentication verification failed')
+        }
 
         // Remove guest flag since user is now authenticated
         localStorage.removeItem('is_guest')
@@ -305,10 +310,13 @@ export default {
         // Otherwise default to dashboard
         const redirectTo = this.$route.query.redirect || '/dashboard'
 
-        // Brief delay to show success message before redirect
+        // Wait a bit longer to ensure session cookie is properly set
+        // and show success message before redirect
         setTimeout(() => {
-          this.$router.push(redirectTo)
-        }, 600)
+          // Use window.location for a full page reload to ensure router guard
+          // picks up the new authentication state
+          window.location.href = redirectTo
+        }, 800)
 
       } catch (err) {
         // Handle login errors - show error from backend or default message

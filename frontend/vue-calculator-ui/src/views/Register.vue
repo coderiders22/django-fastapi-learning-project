@@ -341,7 +341,7 @@ export default {
 
       try {
         // Step 1: Register new user with Django backend
-        await api.post(
+        const registerResponse = await api.post(
           '/auth/register/',
           {
             username: this.username,
@@ -352,18 +352,12 @@ export default {
           }
         )
 
-        // Step 2: Auto-login the newly registered user
-        // This creates a Django session immediately after registration
-        await api.post(
-          '/auth/login/',
-          {
-            username: this.username,
-            password: this.password
-          },
-          {
-            withCredentials: true
-          }
-        )
+        // Backend auto-logs in the user after registration, 
+        // so we don't need a separate login call
+        // Verify the registration response
+        if (!registerResponse.data) {
+          throw new Error('Registration verification failed')
+        }
 
         // Remove guest flag since user now has an account
         localStorage.removeItem('is_guest')
@@ -374,9 +368,11 @@ export default {
         this.messageType = 'success'
         this.showMessage = true
 
-        // Redirect to dashboard after 1.2 seconds
+        // Redirect to dashboard after a longer delay to ensure session is ready
+        // Use window.location for a full page reload to ensure router guard
+        // picks up the new authentication state
         setTimeout(() => {
-          this.$router.replace('/dashboard')
+          window.location.href = '/dashboard'
         }, 1200)
 
       } catch (err) {
