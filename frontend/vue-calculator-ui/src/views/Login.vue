@@ -195,7 +195,7 @@
       v-if="showModal"
       :text="modalMessage"
       :type="modalType"
-      @close="showModal = false"
+      @close="handleModalClose"
     />
 
     <!-- Full-screen loading overlay during authentication -->
@@ -301,14 +301,7 @@ export default {
         this.modalType = 'success'
         this.showModal = true
 
-        // Check if there's a redirect URL in query params (from auth guard)
-        // Otherwise default to dashboard
-        const redirectTo = this.$route.query.redirect || '/dashboard'
-
-        // Brief delay to show success message before redirect
-        setTimeout(() => {
-          this.$router.push(redirectTo)
-        }, 600)
+        // Redirect will happen when modal closes via handleModalClose
 
       } catch (err) {
         // Handle login errors - show error from backend or default message
@@ -337,6 +330,20 @@ export default {
 
       // Redirect to dashboard - guest mode has limited features
       this.$router.push('/dashboard')
+    },
+
+    /**
+     * Handles modal close event
+     * If login was successful, redirects to dashboard
+     */
+    handleModalClose() {
+      this.showModal = false
+      
+      // If it was a success modal, redirect to dashboard
+      if (this.modalType === 'success') {
+        const redirectTo = this.$route.query.redirect || '/dashboard'
+        this.$router.push(redirectTo)
+      }
     }
   }
 }
