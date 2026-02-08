@@ -194,7 +194,6 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://stgi-django-calculator-assessment.vercel.app",
     "https://django-fastapi-learning-project.vercel.app",
     "https://calculatorpro-django-backend.koyeb.app",
 ]

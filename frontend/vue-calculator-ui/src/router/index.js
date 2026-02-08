@@ -14,33 +14,33 @@ import NotFound from '../views/NotFound.vue'
 
 // Route definitions with metadata for guards
 const routes = [
-  { 
-    path: '/', 
-    name: 'Welcome', 
-    component: Welcome 
+  {
+    path: '/',
+    name: 'Welcome',
+    component: Welcome
   },
-  { 
-    path: '/login', 
-    name: 'Login', 
-    component: Login, 
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
     meta: { guestOnly: true }  // Only accessible when not logged in
   },
-  { 
-    path: '/register', 
-    name: 'Register', 
-    component: Register, 
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
     meta: { guestOnly: true }  // Only accessible when not logged in
   },
-  { 
-    path: '/dashboard', 
-    name: 'Dashboard', 
-    component: Dashboard, 
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
     meta: { requiresAuth: true }  // Requires authentication
   },
-  { 
+  {
     path: '/:pathMatch(.*)*',  // Catch-all route for 404
-    name: 'NotFound', 
-    component: NotFound 
+    name: 'NotFound',
+    component: NotFound
   }
 ]
 
@@ -61,27 +61,43 @@ router.beforeEach(async (to, from, next) => {
     return next()
   }
 
-  // For non-guest users, verify authentication
+  // For non-guest users, verify authentication with backend
   if (to.meta.requiresAuth) {
-    // Check if user is authenticated via localStorage flag
-    // This avoids API call on every navigation which might fail due to network/CORS issues
-    const isAuthenticated = localStorage.getItem('is_authenticated') === 'true'
+    try {
+      // Make API call to check authentication status
+      const res = await api.get('/auth/me/', { withCredentials: true })
 
-    if (isAuthenticated) {
-      return next()
+      // If user is authenticated, allow access
+      if (res.data.is_authenticated === true) {
+        return next()
+      }
+
+      // Not authenticated: redirect to login with return URL
+      return next({ name: 'Login', query: { redirect: to.fullPath } })
+    } catch (error) {
+      // API call failed: treat as not authenticated
+      return next({ name: 'Login', query: { redirect: to.fullPath } })
     }
-
-    // Not authenticated: redirect to login
-    return next({ name: 'Login', query: { redirect: to.fullPath } })
   }
 
   // GUEST-ONLY ROUTES: login and register pages
   if (to.meta.guestOnly) {
-    const isAuthenticated = localStorage.getItem('is_authenticated') === 'true'
+    try {
+      // Check if user is already authenticated
+      const res = await api.get('/auth/me/', { withCredentials: true })
 
-    // If authenticated, redirect to dashboard
-    if (isAuthenticated) {
-      return next('/dashboard')
+      // If authenticated, redirect to dashboard (skip login/register)
+      if (res.data.is_authenticated === true) {
+        const redirect = to.query.redirect || '/dashboard'
+        return next(redirect)
+      }
+
+      // If in guest mode, redirect to dashboard
+      if (isGuest) {
+        return next('/dashboard')
+      }
+    } catch (error) {
+      // API error: allow access to login/register page
     }
   }
 

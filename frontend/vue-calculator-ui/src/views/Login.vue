@@ -195,7 +195,7 @@
       v-if="showModal"
       :text="modalMessage"
       :type="modalType"
-      @close="handleModalClose"
+      @close="showModal = false"
     />
 
     <!-- Full-screen loading overlay during authentication -->
@@ -295,16 +295,20 @@ export default {
 
         // Remove guest flag since user is now authenticated
         localStorage.removeItem('is_guest')
-        
-        // Mark user as authenticated for router guard
-        localStorage.setItem('is_authenticated', 'true')
 
         // Show success message to user
         this.modalMessage = 'Login successful!'
         this.modalType = 'success'
         this.showModal = true
 
-        // Redirect will happen when modal closes via handleModalClose
+        // Check if there's a redirect URL in query params (from auth guard)
+        // Otherwise default to dashboard
+        const redirectTo = this.$route.query.redirect || '/dashboard'
+
+        // Brief delay to show success message before redirect
+        setTimeout(() => {
+          this.$router.push(redirectTo)
+        }, 600)
 
       } catch (err) {
         // Handle login errors - show error from backend or default message
@@ -333,20 +337,6 @@ export default {
 
       // Redirect to dashboard - guest mode has limited features
       this.$router.push('/dashboard')
-    },
-
-    /**
-     * Handles modal close event
-     * If login was successful, redirects to dashboard
-     */
-    handleModalClose() {
-      this.showModal = false
-      
-      // If it was a success modal, redirect to dashboard
-      if (this.modalType === 'success') {
-        const redirectTo = this.$route.query.redirect || '/dashboard'
-        this.$router.push(redirectTo)
-      }
     }
   }
 }
@@ -808,35 +798,3 @@ input::placeholder {
   font-weight: 600;
   letter-spacing: 0.5px;
 }
-
-/* ================= RESPONSIVE DESIGN ================= */
-/* Tablets and smaller - hide branding, show only form */
-@media (max-width: 1024px) {
-  .auth-wrapper {
-    grid-template-columns: 1fr;
-  }
-  .auth-branding {
-    display: none;
-  }
-  .auth-form-section {
-    padding: 60px 30px;
-  }
-}
-
-/* Mobile devices - reduce padding and font sizes */
-@media (max-width: 480px) {
-  .auth-form-section {
-    padding: 40px 20px;
-  }
-  .auth-card {
-    padding: 2rem 1.5rem;
-  }
-  .card-header h1 {
-    font-size: 1.5rem;
-  }
-  .header-icon {
-    width: 50px;
-    height: 50px;
-  }
-}
-</style>
