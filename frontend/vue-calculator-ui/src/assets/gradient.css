@@ -1,0 +1,44 @@
+/* assets/premium-theme.css */
+
+:root {
+  --bg-main:        #f8fafc;
+  --bg-card:        rgba(255, 255, 255, 0.78);
+  --surface:        rgba(255, 255, 255, 0.92);
+  
+  --primary:        #3b82f6;        /* nice vibrant yet professional blue */
+  --primary-dark:   #2563eb;
+  --primary-glow:   rgba(59, 130, 246, 0.18);
+  
+  --accent:         #8b5cf6;        /* soft violet accent */
+  --success:        #10b981;
+  --danger:         #ef4444;
+  
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-muted:     #64748b;
+  --text-light:     #94a3b8;
+  
+  --border:         rgba(226, 232, 240, 0.9);
+  --border-strong:  #cbd5e1;
+  
+  --radius:         16px;
+  --radius-lg:      24px;
+  --shadow-sm:      0 4px 16px -4px rgba(0,0,0,0.06);
+  --shadow:         0 10px 40px -12px rgba(15,23,42,0.12);
+  --shadow-glass:   0 8px 32px rgba(31,38,135,0.07);
+  
+  --transition:     all 0.28s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+:root {
+  --navbar-height: 90px; /* fallback */
+}
+
+body {
+  padding-top: var(--navbar-height);
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

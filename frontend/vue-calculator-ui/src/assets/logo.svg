@@ -1,0 +1,9 @@
+<img src="@/assets/logo.svg" alt="CalcPro logo" width="36" />
+<span class="brand">CalcPro</span>
+<style>
+.brand {
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-left: 8px;
+}
+</style>

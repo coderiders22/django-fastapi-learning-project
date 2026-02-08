@@ -1,0 +1,26 @@
+# Core Django framework
+Django==4.2.27
+
+# Django REST Framework for building APIs
+djangorestframework==3.16.1
+
+# JWT support (not actively used but kept for extensibility)
+djangorestframework_simplejwt==5.5.1
+
+# Handles CORS between frontend (Vercel) and backend (Koyeb)
+django-cors-headers==4.9.0
+
+# PostgreSQL database adapter
+psycopg2-binary==2.9.9
+
+# Parses DATABASE_URL from environment variables
+dj-database-url==3.0.1
+
+# Production WSGI server
+gunicorn
+
+# Serves static files efficiently in production
+whitenoise
+
+# Loads environment variables from .env (local development)
+python-dotenv
