@@ -54,17 +54,22 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   // Check if user is in guest mode (stored in localStorage)
   const isGuest = localStorage.getItem('is_guest') === 'true'
+  const hasUsername = !!localStorage.getItem('username')
 
   // PROTECTED ROUTES: require authentication
-  if (to.meta.requiresAuth && isGuest) {
-    // Guest users can access protected routes (limited functionality)
-    return next()
-  }
-
-  // For non-guest users, verify authentication with backend
   if (to.meta.requiresAuth) {
+    // Guest users can access protected routes (limited functionality)
+    if (isGuest) {
+      return next()
+    }
+
+    // Quick check: if no username in localStorage, redirect immediately
+    if (!hasUsername) {
+      return next({ name: 'Login', query: { redirect: to.fullPath } })
+    }
+
+    // Verify with backend API
     try {
-      // Make API call to check authentication status
       const res = await api.get('/auth/me/', { withCredentials: true })
       
       // If user is authenticated, allow access
@@ -72,32 +77,38 @@ router.beforeEach(async (to, from, next) => {
         return next()
       }
 
-      // Not authenticated: redirect to login with return URL
+      // Not authenticated: clear localStorage and redirect to login
+      localStorage.removeItem('username')
       return next({ name: 'Login', query: { redirect: to.fullPath } })
     } catch (error) {
-      // API call failed: treat as not authenticated
+      // API call failed: clear localStorage and redirect to login
+      localStorage.removeItem('username')
       return next({ name: 'Login', query: { redirect: to.fullPath } })
     }
   }
 
   // GUEST-ONLY ROUTES: login and register pages
   if (to.meta.guestOnly) {
-    try {
-      // Check if user is already authenticated
-      const res = await api.get('/auth/me/', { withCredentials: true })
+    // If user has username in localStorage, they might be logged in
+    if (hasUsername) {
+      try {
+        // Verify with backend
+        const res = await api.get('/auth/me/', { withCredentials: true })
 
-      // If authenticated, redirect to dashboard (skip login/register)
-      if (res.data.is_authenticated === true) {
-        const redirect = to.query.redirect || '/dashboard'
-        return next(redirect)
+        // If authenticated, redirect to dashboard
+        if (res.data.is_authenticated === true) {
+          const redirect = to.query.redirect || '/dashboard'
+          return next(redirect)
+        }
+      } catch (error) {
+        // API error: clear stale data
+        localStorage.removeItem('username')
       }
+    }
 
-      // If in guest mode, redirect to dashboard
-      if (isGuest) {
-        return next('/dashboard')
-      }
-    } catch (error) {
-      // API error: allow access to login/register page
+    // If in guest mode, redirect to dashboard
+    if (isGuest) {
+      return next('/dashboard')
     }
   }
 
