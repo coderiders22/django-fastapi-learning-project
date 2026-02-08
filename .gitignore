@@ -20,7 +20,6 @@ env.bak/
 venv.bak/
 
 # Project specific
-Screenshots/
 .DS_Store
 
 # Editor directories and files
