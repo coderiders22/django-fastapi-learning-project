@@ -321,22 +321,54 @@ export default {
       this.mobileMenuOpen = false
     },
 
-    // Handles user logout
+    // Handles user logout - Complete cleanup with immediate redirect
     async logout() {
-      // Immediately clear local data and redirect (no waiting for API)
-      this.clearAuth()
-      localStorage.removeItem('is_guest')
+      // 1. Clear component state immediately
+      this.username = null
       this.closeMenus()
       
-      // Redirect to login page immediately
+      // 2. Clear ALL localStorage (complete wipe)
+      localStorage.clear()
+      
+      // 3. Clear ALL sessionStorage
+      sessionStorage.clear()
+      
+      // 4. Clear cookies immediately
+      this.clearAllCookies()
+      
+      // 5. IMMEDIATE redirect to login (don't wait for anything)
       this.$router.push('/login')
+      
+      // 6. Backend logout call in background (fire and forget)
+      // This happens AFTER redirect so user doesn't wait
+      setTimeout(async () => {
+        try {
+          await api.post('/auth/logout/', {}, { withCredentials: true })
+        } catch (e) {
+          console.warn('Backend logout failed (safe to ignore):', e)
+        }
+      }, 0)
+    },
 
-      // Call backend logout in background (fire and forget)
-      // This clears the session on backend but we don't wait for it
-      try {
-        await api.post('/auth/logout/', {}, { withCredentials: true })
-      } catch (e) {
-        console.warn('Backend logout failed (safe to ignore):', e)
+    // Helper function to clear all accessible cookies
+    clearAllCookies() {
+      // Get all cookies
+      const cookies = document.cookie.split(';')
+      
+      // Clear each cookie
+      for (let cookie of cookies) {
+        const eqPos = cookie.indexOf('=')
+        const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim()
+        
+        // Delete cookie for current domain
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+        
+        // Try to delete for parent domain too
+        const domain = window.location.hostname
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain};`
+        
+        // Try with leading dot
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${domain};`
       }
     },
 
