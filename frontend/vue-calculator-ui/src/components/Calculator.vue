@@ -346,35 +346,19 @@ export default {
      * Called on mount and route changes to keep auth state updated
      */
     async fetchUser() {
-      // Check localStorage first (cross-domain compatible)
-      const storedUsername = localStorage.getItem('username')
-      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
-      
-      if (isAuthenticated && storedUsername) {
-        this.username = storedUsername
-        return
-      }
-
-      // Fallback: fetch from backend
       try {
         const res = await api.get('/auth/me/', { withCredentials: true })
         
         if (res.data.is_authenticated) {
           this.username = res.data.username
-          localStorage.setItem('isAuthenticated', 'true')
-          localStorage.setItem('username', res.data.username)
           // Remove guest flag if user is authenticated
           localStorage.removeItem('is_guest')
         } else {
           this.username = null
-          localStorage.removeItem('isAuthenticated')
-          localStorage.removeItem('username')
         }
       } catch (error) {
         // If API fails, treat as non-authenticated
         this.username = null
-        localStorage.removeItem('isAuthenticated')
-        localStorage.removeItem('username')
       }
     },
     

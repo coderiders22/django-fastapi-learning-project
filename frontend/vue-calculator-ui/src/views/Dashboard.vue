@@ -212,31 +212,10 @@ export default {
   methods: {
     /**
      * Fetches current user authentication status
-     * Checks localStorage first for cross-domain compatibility
-     * Falls back to backend API if localStorage is empty
      * Sets username and guest flag based on response
+     * Falls back to guest mode if request fails
      */
     async fetchUser() {
-      // Check localStorage first (cross-domain compatible)
-      const storedUsername = localStorage.getItem('username')
-      const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
-      const isGuestMode = localStorage.getItem('is_guest') === 'true'
-      
-      // If user is in guest mode
-      if (isGuestMode) {
-        this.username = 'Guest'
-        this.isGuest = true
-        return
-      }
-      
-      // If authenticated via localStorage
-      if (isAuthenticated && storedUsername) {
-        this.username = storedUsername
-        this.isGuest = false
-        return
-      }
-
-      // Fallback: Check with backend API
       try {
         const res = await api.get('/auth/me/', {
           withCredentials: true
@@ -244,9 +223,6 @@ export default {
         if (res.data.is_authenticated) {
           this.username = res.data.username
           this.isGuest = false
-          // Store in localStorage for future
-          localStorage.setItem('isAuthenticated', 'true')
-          localStorage.setItem('username', res.data.username)
         } else {
           this.username = 'Guest'
           this.isGuest = true

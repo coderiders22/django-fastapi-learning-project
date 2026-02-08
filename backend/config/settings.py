@@ -214,9 +214,8 @@ CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS + [
 # =====================
 
 """
-Session-based authentication settings.
-Required because the app uses Django sessions
-instead of token-based authentication.
+Session-based authentication settings for cross-domain setup.
+Frontend (Vercel) and Backend (Koyeb) are on different domains.
 """
 
 SESSION_ENGINE = "django.contrib.sessions.backends.db"
@@ -230,8 +229,11 @@ CSRF_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False  # frontend needs access to csrftoken
 
-SESSION_COOKIE_DOMAIN = os.environ.get("SESSION_COOKIE_DOMAIN")
-CSRF_COOKIE_DOMAIN = os.environ.get("CSRF_COOKIE_DOMAIN")
+# IMPORTANT: For cross-domain authentication, these should NOT be set
+# If set to .koyeb.app, cookies won't work from vercel.app domain
+# Leave them as None to allow cross-origin cookies
+SESSION_COOKIE_DOMAIN = os.environ.get("SESSION_COOKIE_DOMAIN", None)
+CSRF_COOKIE_DOMAIN = os.environ.get("CSRF_COOKIE_DOMAIN", None)
 
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_USE_SESSIONS = False

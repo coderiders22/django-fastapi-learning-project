@@ -282,17 +282,8 @@ export default {
       this.isScrolled = window.scrollY > 20
     })
 
-    // Check localStorage first for authentication (cross-domain compatible)
-    const storedUsername = localStorage.getItem('username')
-    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
-    
-    if (isAuthenticated && storedUsername) {
-      this.username = storedUsername
-      this.authChecked = true
-    } else {
-      // Fallback: Sync authentication state with backend on component mount
-      this.syncAuth()
-    }
+    // Sync authentication state with backend on component mount
+    this.syncAuth()
   },
 
   methods: {
@@ -302,9 +293,8 @@ export default {
         const res = await api.get('/auth/me/', { withCredentials: true })
 
         if (res.data.is_authenticated) {
-          // User is authenticated: update username and localStorage
+          // User is authenticated: update username
           this.username = res.data.username
-          localStorage.setItem('isAuthenticated', 'true')
           localStorage.setItem('username', res.data.username)
           localStorage.removeItem('is_guest')  // Clear guest flag if present
         } else {
@@ -312,7 +302,7 @@ export default {
           this.clearAuth()
         }
       } catch {
-        // API call failed: clear auth data
+        // API call failed: assume not authenticated
         this.clearAuth()
       } finally {
         this.authChecked = true  // Mark sync as complete
@@ -322,7 +312,6 @@ export default {
     // Clears authentication data from component and localStorage
     clearAuth() {
       this.username = null
-      localStorage.removeItem('isAuthenticated')
       localStorage.removeItem('username')
     },
 

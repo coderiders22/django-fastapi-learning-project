@@ -54,68 +54,47 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   // Check if user is in guest mode (stored in localStorage)
   const isGuest = localStorage.getItem('is_guest') === 'true'
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true'
 
   // PROTECTED ROUTES: require authentication
-  if (to.meta.requiresAuth) {
+  if (to.meta.requiresAuth && isGuest) {
     // Guest users can access protected routes (limited functionality)
-    if (isGuest) {
-      return next()
-    }
-    
-    // Check localStorage first (for cross-domain authentication)
-    if (isAuthenticated) {
-      return next()
-    }
+    return next()
+  }
 
-    // Fallback: verify authentication with backend (only if not in localStorage)
+  // For non-guest users, verify authentication with backend
+  if (to.meta.requiresAuth) {
     try {
       // Make API call to check authentication status
       const res = await api.get('/auth/me/', { withCredentials: true })
       
-      // If user is authenticated, store in localStorage and allow access
+      // If user is authenticated, allow access
       if (res.data.is_authenticated === true) {
-        localStorage.setItem('isAuthenticated', 'true')
-        localStorage.setItem('username', res.data.username)
         return next()
       }
 
-      // Not authenticated: clear localStorage and redirect to login
-      localStorage.removeItem('isAuthenticated')
-      localStorage.removeItem('username')
+      // Not authenticated: redirect to login with return URL
       return next({ name: 'Login', query: { redirect: to.fullPath } })
     } catch (error) {
-      // API call failed: clear localStorage and redirect to login
-      localStorage.removeItem('isAuthenticated')
-      localStorage.removeItem('username')
+      // API call failed: treat as not authenticated
       return next({ name: 'Login', query: { redirect: to.fullPath } })
     }
   }
 
   // GUEST-ONLY ROUTES: login and register pages
   if (to.meta.guestOnly) {
-    // If already authenticated via localStorage, redirect to dashboard
-    if (isAuthenticated) {
-      const redirect = to.query.redirect || '/dashboard'
-      return next(redirect)
-    }
-
-    // If in guest mode, redirect to dashboard
-    if (isGuest) {
-      return next('/dashboard')
-    }
-
-    // Fallback: check with backend
     try {
       // Check if user is already authenticated
       const res = await api.get('/auth/me/', { withCredentials: true })
 
-      // If authenticated, store in localStorage and redirect to dashboard
+      // If authenticated, redirect to dashboard (skip login/register)
       if (res.data.is_authenticated === true) {
-        localStorage.setItem('isAuthenticated', 'true')
-        localStorage.setItem('username', res.data.username)
         const redirect = to.query.redirect || '/dashboard'
         return next(redirect)
+      }
+
+      // If in guest mode, redirect to dashboard
+      if (isGuest) {
+        return next('/dashboard')
       }
     } catch (error) {
       // API error: allow access to login/register page
