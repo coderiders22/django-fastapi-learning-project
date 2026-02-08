@@ -298,6 +298,9 @@ export default {
           throw new Error('Login verification failed')
         }
 
+        // Store username in localStorage for instant UI updates (no API wait)
+        localStorage.setItem('username', loginResponse.data.username)
+        
         // Remove guest flag since user is now authenticated
         localStorage.removeItem('is_guest')
 

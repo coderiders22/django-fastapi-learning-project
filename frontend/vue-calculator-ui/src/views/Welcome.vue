@@ -26,7 +26,7 @@
             <div class="badge-wrapper">
               <div class="badge">
                 <Sparkles :size="16" class="badge-icon" />
-                <span>Django • Vue.js • STGI Assessment • Full-Stack Calculator • 2026</span>
+                <span>Django • Vue.js • Full-Stack Calculator • 2026</span>
               </div>
             </div>
 

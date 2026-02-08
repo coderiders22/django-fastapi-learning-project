@@ -323,20 +323,21 @@ export default {
 
     // Handles user logout
     async logout() {
-      try {
-        // Call backend logout endpoint
-        await api.post('/auth/logout/', {}, { withCredentials: true })
-      } catch (e) {
-        console.warn('Logout failed (safe to ignore)')
-      }
-
-      // Clear all auth data
+      // Immediately clear local data and redirect (no waiting for API)
       this.clearAuth()
       localStorage.removeItem('is_guest')
       this.closeMenus()
       
-      // Redirect to login page
+      // Redirect to login page immediately
       this.$router.push('/login')
+
+      // Call backend logout in background (fire and forget)
+      // This clears the session on backend but we don't wait for it
+      try {
+        await api.post('/auth/logout/', {}, { withCredentials: true })
+      } catch (e) {
+        console.warn('Backend logout failed (safe to ignore):', e)
+      }
     },
 
     // Exits guest mode and redirects to login

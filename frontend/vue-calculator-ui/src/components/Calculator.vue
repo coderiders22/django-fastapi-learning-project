@@ -61,7 +61,7 @@
       </div>
       
       <!-- CTA button for guest users to upgrade -->
-      <button v-if="isGuest" class="upgrade-button" @click="$router.push('/login')">
+      <button v-if="isGuest" class="upgrade-button" @click="exitGuestAndLogin">
         <span>Login for Full Access</span>
         <ArrowRight :size="18" />
       </button>
@@ -308,8 +308,8 @@ export default {
       // Clipboard copy feedback
       copied: false,
       
-      // Current user info - null for guests
-      username: null,
+      // Current user info - loaded from localStorage first for instant UI
+      username: localStorage.getItem('username') || null,
       
       // Optional note for calculation (max 500 chars)
       note: '', 
@@ -342,6 +342,17 @@ export default {
   },
   methods: {
     /**
+     * Exits guest mode and redirects to login page
+     * Clears guest flag from localStorage
+     */
+    exitGuestAndLogin() {
+      // Remove guest flag
+      localStorage.removeItem('is_guest')
+      // Redirect to login page
+      this.$router.push('/login')
+    },
+
+    /**
      * Fetches current user data from backend
      * Called on mount and route changes to keep auth state updated
      */
@@ -351,14 +362,18 @@ export default {
         
         if (res.data.is_authenticated) {
           this.username = res.data.username
+          // Keep localStorage in sync
+          localStorage.setItem('username', res.data.username)
           // Remove guest flag if user is authenticated
           localStorage.removeItem('is_guest')
         } else {
           this.username = null
+          localStorage.removeItem('username')
         }
       } catch (error) {
         // If API fails, treat as non-authenticated
         this.username = null
+        localStorage.removeItem('username')
       }
     },
     

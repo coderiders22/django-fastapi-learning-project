@@ -178,8 +178,8 @@ export default {
   
   data() {
     return {
-      username: 'Guest',           // Display name for current user
-      isGuest: true,               // Flag to check authentication status
+      username: localStorage.getItem('username') || 'Guest',  // Load from localStorage first
+      isGuest: !localStorage.getItem('username') && localStorage.getItem('is_guest') === 'true',
       totalCalculations: 0,        // Total number of calculations made
       weekCalculations: 0          // Calculations made in last 7 days
     }
@@ -223,14 +223,18 @@ export default {
         if (res.data.is_authenticated) {
           this.username = res.data.username
           this.isGuest = false
+          // Keep localStorage in sync
+          localStorage.setItem('username', res.data.username)
         } else {
           this.username = 'Guest'
           this.isGuest = true
+          localStorage.removeItem('username')
         }
       } catch (err) {
         // If authentication check fails, default to guest mode
         this.username = 'Guest'
         this.isGuest = true
+        localStorage.removeItem('username')
       }
     },
 

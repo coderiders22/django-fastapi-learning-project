@@ -294,7 +294,7 @@ python manage.py test
 ### Clone Repository
 
 ```bash
-git clone https://github.com/coderiders22/stgi-django-calculator-assessment.git
+git clone https://github.com/coderiders22/django-fastapi-learning-project.git
 
 ```
 
@@ -523,23 +523,23 @@ This demonstrates:
 
 | Screen | Preview |
 |------|--------|
-| Welcome Screen | ![Welcome](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/welcome.png) |
-| Guest Mode Dashboard | ![Guest Dashboard](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/guest%20dashboard.png) |
-| Guest History (Limited) | ![Guest History Limit](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/guest%20history.png) |
-| Guest Limit Reached     | ![Guest Limit](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/guest%20limit.png) |
-| Authentication Screen   | ![Login](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/login.png) |
-| Authentication Screen   | ![Register](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/register.png) |
-| Access Modes            | ![Guest vs Premium Access](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/Guest%20vs%20Premium%20Access.png) |
-| Premium User Dashboard | ![Premium Dashboard](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/premium%20user.png) |
-| Delete Single History Item | ![Premium user deleting an individual calculation](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/delete%20single%20history.png)|
-| Clear Entire History | ![Premium user clearing all calculation history at once](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/clear%20all%20history.png)| 
-| Premium Unlimited History Management | ![Premium Unlimited History](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/939dca14a05bb75676c150dd7f74dfdef593dbbe/Screenshots/Premium%20Unlimited%20History.png) |
-| Add Notes | ![Adding notes to a calculation (Premium feature)](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/add%20notes.png) |
-| Calculation Notes | ![Notes](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/calculation%20notes..png) |
-| Weekly Analytics | ![Analytics](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/analytics.png) |
-| Django Admin Panel | ![Admin](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/admin%20portal.png) |
-| Django Admin Panel | ![Users List](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/30584f196411d2ebfc2792932bdad04dffb757d7/Screenshots/users%20admin.png) |
-| Responsive for all screens | ![Fully responsive and optimized across desktop, tablet, and mobile devices](https://github.com/coderiders22/stgi-django-calculator-assessment/blob/40ee505e056971ea090784b3c2a3778879fe7e12/Screenshots/IMG_0587.png) |
+| Welcome Screen | ![Welcome](./Screenshots/welcome.png) |
+| Guest Mode Dashboard | ![Guest Dashboard](./Screenshots/guest%20dashboard.png) |
+| Guest History (Limited) | ![Guest History Limit](./Screenshots/guest%20history.png) |
+| Guest Limit Reached     | ![Guest Limit](./Screenshots/guest%20limit.png) |
+| Authentication Screen   | ![Login](./Screenshots/login.png) |
+| Authentication Screen   | ![Register](./Screenshots/register.png) |
+| Access Modes            | ![Guest vs Premium Access](./Screenshots/Guest%20vs%20Premium%20Access.png) |
+| Premium User Dashboard | ![Premium Dashboard](./Screenshots/premium%20user.png) |
+| Delete Single History Item | ![Premium user deleting an individual calculation](./Screenshots/delete%20single%20history.png)|
+| Clear Entire History | ![Premium user clearing all calculation history at once](./Screenshots/clear%20all%20history.png)| 
+| Premium Unlimited History Management | ![Premium Unlimited History](./Screenshots/Premium%20Unlimited%20History.png) |
+| Add Notes | ![Adding notes to a calculation (Premium feature)](./Screenshots/add%20notes.png) |
+| Calculation Notes | ![Notes](./Screenshots/calculation%20notes..png) |
+| Weekly Analytics | ![Analytics](./Screenshots/analytics.png) |
+| Django Admin Panel | ![Admin](./Screenshots/admin%20portal.png) |
+| Django Admin Panel | ![Users List](./Screenshots/users%20admin.png) |
+| Responsive for all screens | ![Fully responsive and optimized across desktop, tablet, and mobile devices](./Screenshots/IMG_0587.png) |
 
 ---
 

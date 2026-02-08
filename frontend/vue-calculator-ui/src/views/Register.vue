@@ -370,6 +370,9 @@ export default {
           throw new Error('Auto-login failed after registration')
         }
 
+        // Store username in localStorage for instant UI updates
+        localStorage.setItem('username', loginResponse.data.username)
+        
         // Remove guest flag since user now has an account
         localStorage.removeItem('is_guest')
 

@@ -87,7 +87,7 @@
       -->
       <div class="footer-bottom">
         <p class="footer-copyright">
-          © 2026 CalculatorPro — STGI Assessment Project
+          © 2026 CalculatorPro — Professional Calculator Application
         </p>
         
         <!-- Technology badges showing key features -->
