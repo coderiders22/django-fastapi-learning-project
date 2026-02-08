@@ -284,7 +284,7 @@ export default {
 
       try {
         // Send login request to backend with credentials
-        await api.post(
+        const loginResponse = await api.post(
           '/auth/login/',
           {
             username: this.username,
@@ -292,6 +292,11 @@ export default {
           },
           { withCredentials: true }  // Important: sends cookies with request
         )
+
+        // Verify login was successful
+        if (!loginResponse.data.is_authenticated) {
+          throw new Error('Login verification failed')
+        }
 
         // Remove guest flag since user is now authenticated
         localStorage.removeItem('is_guest')
@@ -301,19 +306,34 @@ export default {
         this.modalType = 'success'
         this.showModal = true
 
+        // Wait a bit to ensure cookies are set, then verify session before redirect
+        await new Promise(resolve => setTimeout(resolve, 800))
+
+        // Verify session is working before redirect
+        try {
+          const verifyResponse = await api.get('/auth/me/', { withCredentials: true })
+          if (!verifyResponse.data.is_authenticated) {
+            throw new Error('Session verification failed')
+          }
+        } catch (verifyError) {
+          console.error('Session verification failed:', verifyError)
+          this.modalMessage = 'Session setup failed. Please try again.'
+          this.modalType = 'error'
+          this.showModal = true
+          return
+        }
+
         // Check if there's a redirect URL in query params (from auth guard)
         // Otherwise default to dashboard
         const redirectTo = this.$route.query.redirect || '/dashboard'
 
-        // Brief delay to show success message before redirect
-        setTimeout(() => {
-          this.$router.push(redirectTo)
-        }, 600)
+        // Now redirect - session is verified
+        this.$router.push(redirectTo)
 
       } catch (err) {
         // Handle login errors - show error from backend or default message
         this.modalMessage =
-          err.response?.data?.error || 'Invalid credentials'
+          err.response?.data?.error || err.message || 'Invalid credentials'
         this.modalType = 'error'
         this.showModal = true
       } finally {

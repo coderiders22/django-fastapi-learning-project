@@ -354,7 +354,7 @@ export default {
 
         // Step 2: Auto-login the newly registered user
         // This creates a Django session immediately after registration
-        await api.post(
+        const loginResponse = await api.post(
           '/auth/login/',
           {
             username: this.username,
@@ -365,6 +365,11 @@ export default {
           }
         )
 
+        // Verify login was successful
+        if (!loginResponse.data.is_authenticated) {
+          throw new Error('Auto-login failed after registration')
+        }
+
         // Remove guest flag since user now has an account
         localStorage.removeItem('is_guest')
 
@@ -374,10 +379,30 @@ export default {
         this.messageType = 'success'
         this.showMessage = true
 
-        // Redirect to dashboard after 1.2 seconds
+        // Wait and verify session before redirect
+        await new Promise(resolve => setTimeout(resolve, 1000))
+
+        // Verify session is working
+        try {
+          const verifyResponse = await api.get('/auth/me/', { withCredentials: true })
+          if (!verifyResponse.data.is_authenticated) {
+            throw new Error('Session verification failed')
+          }
+        } catch (verifyError) {
+          console.error('Session verification failed:', verifyError)
+          this.message = 'Session setup failed. Please login manually.'
+          this.messageType = 'error'
+          this.showMessage = true
+          setTimeout(() => {
+            this.$router.push('/login')
+          }, 2000)
+          return
+        }
+
+        // Redirect to dashboard
         setTimeout(() => {
           this.$router.replace('/dashboard')
-        }, 1200)
+        }, 200)
 
       } catch (err) {
   const data = err.response?.data
@@ -400,7 +425,7 @@ export default {
   }
 
   else {
-    this.message = 'Something went wrong. Please try again.'
+    this.message = err.message || 'Something went wrong. Please try again.'
     this.messageType = 'error'
     this.showMessage = true
   }
